@@ -404,7 +404,7 @@ class BitcoinEnv(Environment):
 
         # Reward is in dollar-change. As we build a great portfolio, the reward should get bigger and bigger (and
         # the agent should notice this)
-        if self.hypers.advantage_reward:
+        if self.hypers.reward_type == 'advantage':
             reward += (total_now - total_before) - (step_acc.hold_value - hold_before)
         else:
             reward += (total_now - total_before)
@@ -417,10 +417,20 @@ class BitcoinEnv(Environment):
         if self.hypers.scale:
             reward = self.scaler.transform([reward], Scaler.REWARD)[0]
 
+        if self.hypers.reward_type == 'sharpe':
+            reward = 0
+
         terminal = int(step_acc.i + 1 >= self.limit)
         if terminal and self.mode in (Mode.TRAIN, Mode.TEST):
             # We're done.
             step_acc.signals.append(0)  # Add one last signal (to match length)
+            if self.hypers.reward_type == 'sharpe':
+                diff = (pd.Series(step_acc.totals.trade).pct_change() - pd.Series(step_acc.totals.hold).pct_change())[1:]
+                mean, std = diff.mean(), diff.std()
+                if (std, mean) != (0, 0):
+                    reward = mean / std
+
+
         if terminal and self.mode in (Mode.LIVE, Mode.TEST_LIVE):
             # Only do real buy/sell on last step if LIVE (in case there are multiple steps b/w, we only care about
             # present). Then we unset terminal, after we fetch some new data (keep going)
