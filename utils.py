@@ -52,21 +52,6 @@ def add_common_args(parser):
 guess_overrides = [
     [
         {},  # usually want 1 empty dict, which means "try the hard-coded defaults"
-        {'discount': .95},
-        # {'update_mode.batch_size': 10},
-        {'net.l2': 7., 'net.l1': 3.},  # only l1
-        {'net.l1': 7., 'net.l2': 7.},  # off
-        {'pct_change': False},
-        {'net.depth_post': 2},
-    ],
-    [
-        {'single_action': False},
-        {'punish_repeats': 5000},
-        {'net.width': 4},
-        {'net.width': 8},
-        {'net.l1': 4., 'net.l2': 4.},  # both
-        {'repeat_last_state': True},
-        {'step_optimizer.learning_rate': 5.5},
     ]
 ]
 

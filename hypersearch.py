@@ -347,10 +347,7 @@ hypers['custom'] = {
     # data.py) which makes it hard for the net to follow.
     # Note: not valuable if GDAX is main (ie, not valuable if the bigger exchange is the main, only
     # if the smaller exchange (eg Kraken) is main)
-    'arbitrage': {
-        'type': 'bool',
-        'guess': False
-    },
+    'arbitrage': False,
 
     # Conv / LSTM layers
     'net.depth_mid': {
